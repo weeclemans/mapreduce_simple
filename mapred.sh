@@ -31,8 +31,8 @@ done;
 pipes_w=`seq 1 ${NUM_COLUMNS} | xargs -I {} echo "/tmp/testpipe_w_{}"`
 #echo $pipes_w
 
-rm -f threads.awk
 paste -d' ' $pipes_w
-rm -f ./threads.awk /tmp/testpipe* 
 wait $pids
+
+rm -f ./threads.awk /tmp/testpipe*
 
