@@ -4,14 +4,15 @@ int main()
 {
 
     char line[40];
-    int lineno=0;
+    int num=0;
     while((fgets(line,40, stdin)) != NULL)
     {
-	//lineno=atoi(line);
-	sscanf(line, "%d", &lineno);
+	//num=atoi(line);
+	/* convert char array to number */
+	sscanf(line, "%d", &num);
 
-        //lineno++;
-        printf("%d\n",++lineno);
+        //num++;
+        printf("%d\n",++num);
         //fputs(line, stdout);
     }
 }
