@@ -15,5 +15,6 @@ int main()
         printf("%d\n",++num);
         //fputs(line, stdout);
     }
+    return 0;
 }
 
