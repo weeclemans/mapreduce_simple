@@ -22,8 +22,10 @@ pids="$!"
 #echo Stage 2
 
 for cpipes in `seq 1 $NUM_COLUMNS`;
-do ./increment.sh /tmp/testpipe_r_${cpipes} /tmp/testpipe_w_${cpipes} >/dev/null 2>&1 &
-pids="$pids $!"
+do
+ #./increment.sh /tmp/testpipe_r_${cpipes} /tmp/testpipe_w_${cpipes} >/dev/null 2>&1 &
+ ./increment < /tmp/testpipe_r_${cpipes} >> /tmp/testpipe_w_${cpipes} 2>/dev/null &
+ pids="$pids $!"
 done;
 
 #echo Stage 3
