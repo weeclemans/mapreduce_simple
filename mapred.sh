@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+pids=""
 NUM_COLUMNS=`head -1 $1 | awk 'END {print NF}'`
 #printf $NUM_COLUMNS
 
@@ -15,9 +15,13 @@ done;
 #echo Stage 1
 
 #awk '{ for (i = 1; i <= NF; i++) { out="/tmp/testpipe_r_"i; print $i > out } }' $1 >/dev/null 2>&1 &
-(printf "{ "; for ((i=1;i<=NUM_COLUMNS;i++)); do printf "print \$$i > \"/tmp/testpipe_r_$i\"; "; done; printf "}\n") > threads.awk 
-awk -f threads.awk $1 >/dev/null 2>&1 &
-pids="$!"
+#(printf "{ "; for ((i=1;i<=NUM_COLUMNS;i++)); do printf "print \$$i > \"/tmp/testpipe_r_$i\"; "; done; printf "}\n") > threads.awk 
+#awk -f threads.awk $1 >/dev/null 2>&1 &
+for ((i=1;i<=NUM_COLUMNS;i++));
+do
+ awk '{print $'$i'}' $1 >> /tmp/testpipe_r_$i 2>/dev/null & 
+ pids="$pids $!" 
+done;
 
 #echo Stage 2
 
