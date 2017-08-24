@@ -1,15 +1,16 @@
 #!/bin/bash
 
 pids=""
-NUM_COLUMNS=`head -1 $1 | awk 'END {print NF}'`
+NUM_COLUMNS=`head -1 $1 | wc -w`
 #printf $NUM_COLUMNS
-
-rm -f /tmp/testpipe*
+rm -f ./threads.awk /tmp/testpipe*
 
 #echo Stage 0
 
 for cpipes in `seq 1 $NUM_COLUMNS`;
-do mkfifo /tmp/testpipe_r_${cpipes}; mkfifo /tmp/testpipe_w_${cpipes};
+do
+ #mkfifo /tmp/testpipe_r_${cpipes};
+ mkfifo /tmp/testpipe_w_${cpipes};
 done;
 
 #echo Stage 1
@@ -19,18 +20,18 @@ done;
 #awk -f threads.awk $1 >/dev/null 2>&1 &
 for ((i=1;i<=NUM_COLUMNS;i++));
 do
- awk '{print $'$i'}' $1 >> /tmp/testpipe_r_$i 2>/dev/null & 
+ cut -d' ' -f $i $1 | ./increment >> /tmp/testpipe_w_$i 2>/dev/null & 
  pids="$pids $!" 
 done;
 
 #echo Stage 2
 
-for cpipes in `seq 1 $NUM_COLUMNS`;
-do
+#for cpipes in `seq 1 $NUM_COLUMNS`;
+#do
  #./increment.sh /tmp/testpipe_r_${cpipes} /tmp/testpipe_w_${cpipes} >/dev/null 2>&1 &
- ./increment < /tmp/testpipe_r_${cpipes} >> /tmp/testpipe_w_${cpipes} 2>/dev/null &
- pids="$pids $!"
-done;
+# ./increment < /tmp/testpipe_r_${cpipes} >> /tmp/testpipe_w_${cpipes} 2>/dev/null &
+# pids="$pids $!"
+#done;
 
 #echo Stage 3
 
